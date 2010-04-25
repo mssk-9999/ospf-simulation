@@ -1,0 +1,13 @@
+OSPF Simulation项目情况的简单介绍
+
+>>>Code Conventions(编码规范)
+
+特别强调一下注释，注释要解释清楚当前的接口实现了什么功能，以便其他人员调用。
+具体其他的编码规范，参考Sun官方的Code Conventions。
+**注意：由于编码格式的问题，请使用英文(English)进行注释，否则不同的平台可能会出现乱码现象。
+
+
+>>>OSPF Code Address and Password(地址)
+
+登录Gmail后，进入Google Code页面，点击右上角的“My Favourites”选项，弹出一个下拉菜单，选择“ospf-simulation”，即可进入项目首页(http://code.google.com/p/ospf-simulation/)。
+具体如何使用Google Code和SVN请查阅GoogleCodeQuickGuide.pdf文档。
