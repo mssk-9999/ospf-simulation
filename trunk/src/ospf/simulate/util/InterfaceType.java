@@ -2,7 +2,7 @@ package ospf.simulate.util;
 
 public enum InterfaceType {
 
-	FastEthernet,
-	Ethernet,
-	Serial
+	F, // FastEthernet	
+	E, //Ethernet
+	S //Serial
 }

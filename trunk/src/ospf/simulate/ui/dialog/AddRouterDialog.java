@@ -50,6 +50,7 @@ public class AddRouterDialog extends JDialog {
 
 		if (addButton == null) {
 			addButton = new JButton("添加");
+			addButton.setToolTipText("添加路由器到模拟器当中");
 			addButton.addActionListener(new ActionListener() {
 
 				@Override
@@ -60,13 +61,20 @@ public class AddRouterDialog extends JDialog {
 							.getRouterList();
 					DefaultListModel model = (DefaultListModel) list.getModel();
 					model.add(model.getSize(), router);
+					list.setSelectedIndex(model.getSize() - 1);
 					list.validate();
 					// TODO 路由器接口列表的更新
 					JList interfaceList = MainFrame.getMainFrame()
 							.getInterfaceListPanel().getInterfaceList();
-					DefaultListModel model2 = (DefaultListModel) interfaceList
-							.getModel();
-//					for (int i = 0; )
+//					DefaultListModel model2 = (DefaultListModel) interfaceList
+//							.getModel();
+					DefaultListModel model2 = new DefaultListModel(); 
+					for (int i = 0; i < router.getInterfaces().size(); i++) {
+						model2.add(i, router.getInterfaces().get(i));
+					}
+					interfaceList.setModel(model2);
+					interfaceList.setSelectedIndex(0);
+					interfaceList.validate();
 					// TODO 路由拓扑图的更新
 					// 退出当前窗口
 					setVisible(false);

@@ -14,12 +14,12 @@ public class Router {
 
 	private void initInterfaces() {
 
-		this.addInterface(InterfaceType.FastEthernet, 0);
-		this.addInterface(InterfaceType.FastEthernet, 1);
-		this.addInterface(InterfaceType.FastEthernet, 2);
-		this.addInterface(InterfaceType.FastEthernet, 3);
-		this.addInterface(InterfaceType.Serial, 0);
-		this.addInterface(InterfaceType.Serial, 1);
+		this.addInterface(InterfaceType.F, 0);
+		this.addInterface(InterfaceType.F, 1);
+		this.addInterface(InterfaceType.F, 2);
+		this.addInterface(InterfaceType.F, 3);
+		this.addInterface(InterfaceType.S, 0);
+		this.addInterface(InterfaceType.S, 1);
 	}
 	
 	public void calculateRID() {

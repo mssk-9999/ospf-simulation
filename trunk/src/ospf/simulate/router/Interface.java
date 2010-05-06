@@ -48,7 +48,7 @@ public class Interface {
 
 	public String toString() {
 		
-		return this.getType() + " " + this.getInterfaceNumber();
+		return this.router.toString() + " - " +this.getType() + "/" + this.getInterfaceNumber();
 	}
 	
 	private Router router = null;
