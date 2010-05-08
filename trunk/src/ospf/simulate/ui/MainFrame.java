@@ -6,9 +6,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 
+import ospf.simulate.Simulator;
+import ospf.simulate.calculate.RunOSPFProtocol;
 import ospf.simulate.ui.dialog.AddRouterDialog;
+import ospf.simulate.ui.dialog.LinkDialog;
+import ospf.simulate.ui.dialog.SetInterfaceDialog;
+import ospf.simulate.ui.dialog.ShowRouterInfoDialog;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
@@ -100,7 +106,9 @@ public class MainFrame extends JFrame {
 
 			mainMenuBar.add(getAddButton());
 			mainMenuBar.add(getLinkButton());
+			mainMenuBar.add(getSetButton());
 			mainMenuBar.add(getRunButton());
+			mainMenuBar.add(getShowButton());
 		}
 		return mainMenuBar;
 	}
@@ -134,13 +142,42 @@ public class MainFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO 打开连线的窗口
-
+					if (Simulator.getRouters().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "You must add some routers");
+						return;
+					}
+					LinkDialog linkDialog = new LinkDialog(MainFrame
+							.getMainFrame());
+					linkDialog.setVisible(true);
 				}
 			});
 		}
 		return linkButton;
 	}
 
+	public JButton getSetButton() {
+		
+		if (setButton == null) {
+			setButton = new JButton("Set");
+			setButton.setToolTipText("Set up the interface of the routers");
+			setButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					if (Simulator.getRouters().isEmpty()) {
+						JOptionPane.showMessageDialog(null, "You must add some routers");
+						return;
+					}
+					// TODO Set up the routers' interfaces' info
+					SetInterfaceDialog setDialog = new SetInterfaceDialog(MainFrame.getMainFrame());
+					setDialog.setVisible(true);
+				}
+			});
+		}
+		return setButton;
+	}
+	
 	public JButton getRunButton() {
 
 		if (runButton == null) {
@@ -151,13 +188,31 @@ public class MainFrame extends JFrame {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO 运行OSPF协议，得到的结果存放在相应的数据库中
-
+					RunOSPFProtocol.runProtocol();
 				}
 			});
 		}
 		return runButton;
 	}
 
+	public JButton getShowButton() {
+	
+		if (showButton == null) {
+			showButton = new JButton("Show");
+			showButton.setToolTipText("Show the database info of the router");
+			showButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					ShowRouterInfoDialog infoDialog = new ShowRouterInfoDialog(MainFrame.getMainFrame());
+					infoDialog.setVisible(true);
+				}
+			});
+		}
+		return showButton;
+	}
+	
 	public static MainFrame getMainFrame() {
 
 		if (mainFrame == null) {
@@ -177,6 +232,8 @@ public class MainFrame extends JFrame {
 	private JMenuBar mainMenuBar = null;
 	private JButton addButton = null;
 	private JButton linkButton = null;
+	private JButton setButton = null;
 	private JButton runButton = null;
+	private JButton showButton = null;
 	private static MainFrame mainFrame = null;
 }

@@ -44,6 +44,11 @@ public class Link {
 		this.otherSide = otherSide;
 	}
 
+	public String toString() {
+		
+		return "Link: cost-" + cost + " Dire: " + oneSide + "->" + otherSide;
+	}
+	
 	private int cost = 0;
 	private Interface oneSide = null;
 	private Interface otherSide = null;

@@ -45,13 +45,10 @@ public class RouterListPanel extends JPanel {
 
 					JList list = (JList) e.getSource();
 					Router router = (Router) list.getSelectedValue();
-					System.out.println(router.toString());
+					
 					// TODO 设置InterfaceListPane的显示
 					JList interfaceList = MainFrame.getMainFrame()
 							.getInterfaceListPanel().getInterfaceList();
-					// DefaultListModel model2 = (DefaultListModel)
-					// interfaceList
-					// .getModel();
 					DefaultListModel model2 = new DefaultListModel();
 					for (int i = 0; i < router.getInterfaces().size(); i++) {
 						model2.add(i, router.getInterfaces().get(i));
