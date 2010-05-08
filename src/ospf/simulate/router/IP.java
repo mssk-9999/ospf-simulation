@@ -1,5 +1,7 @@
 package ospf.simulate.router;
 
+import java.util.StringTokenizer;
+
 public class IP {
 
 	public IP(String ip, String mask) {
@@ -24,6 +26,22 @@ public class IP {
 	 */
 	public int compare(IP ip) {
 		// TODO
+		StringTokenizer tokenizer1 = new StringTokenizer(this.ipNumber, ".");
+		StringTokenizer tokenizer2 = new StringTokenizer(ip.ipNumber, ".");
+		for (int i = 0; i < 4; i++) {
+			int a = Integer.parseInt(tokenizer1.nextToken());
+			int b = Integer.parseInt(tokenizer2.nextToken());
+			if (a > b) {
+				return 1;
+			} if (a == b) {
+				if (i != 3) {
+					continue;
+				}
+				return 0;
+			} if (a < b) {
+				return -1;
+			}
+		}
 		return 1;
 	}
 	
@@ -59,7 +77,10 @@ public class IP {
 		this.maskNumber = maskNumber;
 	}
 
-
+	public String toString() {
+		
+		return "" + ipNumber + "-" + maskNumber;
+	}
 
 	private String networkNumber = null;
 	private String ipNumber = null;

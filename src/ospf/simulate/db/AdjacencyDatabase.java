@@ -1,5 +1,7 @@
 package ospf.simulate.db;
 
+import ospf.simulate.router.Interface;
+
 
 /**
  * Adjacency Database
@@ -9,5 +11,11 @@ package ospf.simulate.db;
  */
 public class AdjacencyDatabase {
 
+}
+
+class AdjacencyDBItem {
+	
+	Interface mineInterface;
+	Interface neighbourInterface;
 }
 

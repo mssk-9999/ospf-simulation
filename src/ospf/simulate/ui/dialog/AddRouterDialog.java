@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 
+import ospf.simulate.Simulator;
 import ospf.simulate.router.Router;
 import ospf.simulate.ui.MainFrame;
 import ospf.simulate.util.Constant;
@@ -57,6 +58,9 @@ public class AddRouterDialog extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 					// TODO 实现添加路由器的功能
 					Router router = new Router(getRouterNameField().getText());
+					// add the router to the simulator
+					Simulator.addRouter(router);
+					// add the router to the router list
 					JList list = MainFrame.getMainFrame().getRouterListPanel()
 							.getRouterList();
 					DefaultListModel model = (DefaultListModel) list.getModel();
@@ -66,8 +70,7 @@ public class AddRouterDialog extends JDialog {
 					// TODO 路由器接口列表的更新
 					JList interfaceList = MainFrame.getMainFrame()
 							.getInterfaceListPanel().getInterfaceList();
-//					DefaultListModel model2 = (DefaultListModel) interfaceList
-//							.getModel();
+
 					DefaultListModel model2 = new DefaultListModel(); 
 					for (int i = 0; i < router.getInterfaces().size(); i++) {
 						model2.add(i, router.getInterfaces().get(i));
@@ -76,7 +79,8 @@ public class AddRouterDialog extends JDialog {
 					interfaceList.setSelectedIndex(0);
 					interfaceList.validate();
 					// TODO 路由拓扑图的更新
-					// 退出当前窗口
+					
+					// exit current dialog
 					setVisible(false);
 					dispose();
 				}

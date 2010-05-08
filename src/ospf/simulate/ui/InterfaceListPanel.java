@@ -1,7 +1,6 @@
 package ospf.simulate.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
