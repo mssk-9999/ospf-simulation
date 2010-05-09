@@ -56,7 +56,7 @@ public class AddRouterDialog extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO 实现添加路由器的功能
+					// 实现添加路由器的功能
 					Router router = new Router(getRouterNameField().getText());
 					// add the router to the simulator
 					Simulator.addRouter(router);
@@ -67,7 +67,9 @@ public class AddRouterDialog extends JDialog {
 					model.add(model.getSize(), router);
 					list.setSelectedIndex(model.getSize() - 1);
 					list.validate();
-					// TODO 路由器接口列表的更新
+					System.err.println(router.info());
+//					MainFrame.getMainFrame().getRouterCLIPanel().getRouterCLIArea().append(router.info() + "\n");
+					// 路由器接口列表的更新
 					JList interfaceList = MainFrame.getMainFrame()
 							.getInterfaceListPanel().getInterfaceList();
 

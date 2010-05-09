@@ -55,13 +55,14 @@ public class SetInterfaceDialog extends JDialog {
 			routersBox = new JComboBox(Simulator.getRouters());
 			routersBox.setSelectedIndex(0);
 			routersBox.addItemListener(new ItemListener() {
-				
+
 				@Override
 				public void itemStateChanged(ItemEvent e) {
 					// TODO Auto-generated method stub
-					JComboBox tempBox =(JComboBox) e.getSource();
+					JComboBox tempBox = (JComboBox) e.getSource();
 					Router router = (Router) tempBox.getSelectedItem();
-					DefaultComboBoxModel model = new DefaultComboBoxModel(router.getInterfaces());
+					DefaultComboBoxModel model = new DefaultComboBoxModel(
+							router.getInterfaces());
 					interfacesBox.setModel(model);
 					interfacesBox.setSelectedIndex(0);
 					interfacesBox.validate();
@@ -110,12 +111,16 @@ public class SetInterfaceDialog extends JDialog {
 							.getSelectedItem();
 					interface1.setIp(new IP(getIpTextField().getText(),
 							getMaskTextField().getText()));
+					System.err.println(interface1.getRouter().info());
+//					MainFrame.getMainFrame().getRouterCLIPanel()
+//							.getRouterCLIArea().append(
+//									interface1.getRouter().info() + "\n");
 				}
 			});
 		}
 		return setButton;
 	}
-	
+
 	public JButton getDelButton() {
 
 		if (delButton == null) {
@@ -128,6 +133,10 @@ public class SetInterfaceDialog extends JDialog {
 					Interface interface1 = (Interface) getInterfacesBox()
 							.getSelectedItem();
 					interface1.setIp(null);
+					System.err.println(interface1.getRouter().info());
+//					MainFrame.getMainFrame().getRouterCLIPanel()
+//							.getRouterCLIArea().append(
+//									interface1.getRouter().info() + "\n");
 				}
 			});
 		}
@@ -135,7 +144,7 @@ public class SetInterfaceDialog extends JDialog {
 	}
 
 	private JComboBox routersBox = null;
-	private JComboBox interfacesBox = null;
+	JComboBox interfacesBox = null;
 	private JTextField ipTextField = null;
 	private JTextField maskTextField = null;
 

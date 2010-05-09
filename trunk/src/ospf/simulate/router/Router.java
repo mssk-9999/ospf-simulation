@@ -2,10 +2,12 @@ package ospf.simulate.router;
 
 import java.util.Vector;
 
-import ospf.simulate.db.AdjacencyDatabase;
 import ospf.simulate.db.ForwardDatabase;
 import ospf.simulate.db.LinkStateDatabase;
+import ospf.simulate.db.NeighborDBItem;
+import ospf.simulate.db.NeighborDatabase;
 import ospf.simulate.util.InterfaceType;
+import ospf.simulate.util.OSPFState;
 
 public class Router {
 
@@ -97,18 +99,66 @@ public class Router {
 				+ "**************";
 	}
 
-	
-	
-	public AdjacencyDatabase getAdjacencyDatabase() {
-		
-		if (adjacencyDatabase == null) {
-			adjacencyDatabase = new AdjacencyDatabase();
+	public OSPFState getState() {
+		return state;
+	}
+
+	public void setState(OSPFState state) {
+		this.state = state;
+	}
+
+	public void findNeighbor() {
+
+		// clear the items in the NeighborDatabase
+		clearNeighborDatabase();
+		for (int i = 0; i < this.getInterfaces().size(); i++) {
+			Interface interface1 = this.getInterfaces().get(i);
+			if (interface1.getLink() != null) {
+				// create a neighbor item
+				NeighborDBItem item = new NeighborDBItem();
+				// set the neighbor
+				item.setNeighborIp(interface1.getLink().getOtherSide().getIp());
+				item.setMineInterface(interface1);
+				item.setNeighborRID(interface1.getLink().getOtherSide()
+						.getRouter().getRID());
+				item.setState(OSPFState.Init);
+
+				// add the neighbor to the database
+				this.getNeighborDatabase().addNeighbor(item);
+			} else {
+				System.out.println(interface1.getRouter().toString()
+						+ interface1.getType()
+						+ interface1.getInterfaceNumber() + " link is null");
+			}
 		}
-		return adjacencyDatabase;
+	}
+
+	public NeighborDatabase getNeighborDatabase() {
+
+		if (neighborDatabase == null) {
+			neighborDatabase = new NeighborDatabase();
+		}
+		return neighborDatabase;
+	}
+
+	private void clearNeighborDatabase() {
+		
+		getNeighborDatabase().clearAll();
+	}
+	
+	public String showNeighbors() {
+
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("Neighbor ID\tState\tAddress\tInterface\n");
+		for (int i = 0; i < getNeighborDatabase().getNeighbors().size(); i++) {
+			stringBuilder.append(getNeighborDatabase().getNeighbors().get(i)
+					.toString());
+		}
+		return stringBuilder.toString();
 	}
 
 	public LinkStateDatabase getLinkStateDatabase() {
-		
+
 		if (linkStateDatabase == null) {
 			linkStateDatabase = new LinkStateDatabase();
 		}
@@ -116,7 +166,7 @@ public class Router {
 	}
 
 	public ForwardDatabase getForwardDatabase() {
-		
+
 		if (forwardDatabase == null) {
 			forwardDatabase = new ForwardDatabase();
 		}
@@ -126,8 +176,9 @@ public class Router {
 	private String name;
 	private IP RID = null;
 	private Vector<Interface> interfaces = new Vector<Interface>();
-	
-	private AdjacencyDatabase adjacencyDatabase = null;
+	private OSPFState state = OSPFState.Down;
+
+	private NeighborDatabase neighborDatabase = null;
 	private LinkStateDatabase linkStateDatabase = null;
 	private ForwardDatabase forwardDatabase = null;
 }
