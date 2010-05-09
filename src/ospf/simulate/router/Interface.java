@@ -52,6 +52,11 @@ public class Interface {
 				+ this.getInterfaceNumber();
 	}
 
+	public String getInterfaceInfo() {
+		
+		return this.getType() + "/" + this.getInterfaceNumber();
+	}
+	
 	public String info() {
 
 		return "[Interface: " + this.toString() + " -- " + ip + " -- " + link

@@ -71,7 +71,7 @@ public class LinkDialog extends JDialog {
 			centerPanel.add(getCosTextField());
 
 			centerPanel.add(getLinkButton());
-			centerPanel.add(getUnLinkButton());
+//			centerPanel.add(getUnLinkButton());
 		}
 		return centerPanel;
 	}
@@ -191,11 +191,13 @@ public class LinkDialog extends JDialog {
 						Link link1 = new Link(interface1, interface2, cost);
 						interface1.setLink(link1);
 						System.err.println(interface1.getRouter().info());
+//						MainFrame.getMainFrame().getRouterCLIPanel().getRouterCLIArea().append(interface1.getRouter().info() + "\n");
 						
 						// initialize interface2
 						Link link2 = new Link(interface2, interface1, cost);
 						interface2.setLink(link2);
 						System.err.println(interface2.getRouter().info());
+//						MainFrame.getMainFrame().getRouterCLIPanel().getRouterCLIArea().append(interface2.getRouter().info() + "\n");
 					} catch (NumberFormatException nfe) {
 						JOptionPane
 								.showMessageDialog(null,

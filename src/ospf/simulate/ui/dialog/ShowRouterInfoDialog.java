@@ -13,6 +13,7 @@ import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
 import ospf.simulate.Simulator;
+import ospf.simulate.router.Router;
 import ospf.simulate.ui.MainFrame;
 import ospf.simulate.util.Constant;
 
@@ -73,18 +74,20 @@ public class ShowRouterInfoDialog extends JDialog {
 
 	public JButton getAdjacencyButton() {
 		
-		if (adjacencyButton == null) {
-			adjacencyButton = new JButton("Adjacency");
-			adjacencyButton.addActionListener(new ActionListener() {
+		if (neighborButton == null) {
+			neighborButton = new JButton("Neighbor");
+			neighborButton.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
-					
+					Router router = (Router) getRouterComboBox().getSelectedItem();
+					String neighborInfo = router.showNeighbors();
+					getInfoTextArea().setText(neighborInfo);
 				}
 			});
 		}
-		return adjacencyButton;
+		return neighborButton;
 	}
 
 	public JButton getForwardButton() {
@@ -125,7 +128,7 @@ public class ShowRouterInfoDialog extends JDialog {
 	private JTextArea infoTextArea = null;
 	
 	private Box buttonBox = null;
-	private JButton adjacencyButton = null;
+	private JButton neighborButton = null;
 	private JButton forwardButton = null;
 	private JButton linkStateButton = null;
 }

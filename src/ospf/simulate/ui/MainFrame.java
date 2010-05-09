@@ -63,6 +63,7 @@ public class MainFrame extends JFrame {
 		if (rightSplitPane == null) {
 			rightSplitPane = new JSplitPane();
 			rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			rightSplitPane.setBottomComponent(getRouterCLIPanel());
 		}
 		return rightSplitPane;
 	}
@@ -91,13 +92,13 @@ public class MainFrame extends JFrame {
 		return topologyPanel;
 	}
 
-	// public RouterCLIPanel getRouterCLIPanel() {
-	//		
-	// if (routerCLIPanel == null) {
-	// routerCLIPanel = new RouterCLIPanel();
-	// }
-	// return routerCLIPanel;
-	// }
+	public RouterCLIPanel getRouterCLIPanel() {
+
+		if (routerCLIPanel == null) {
+			routerCLIPanel = new RouterCLIPanel();
+		}
+		return routerCLIPanel;
+	}
 
 	public JMenuBar getMainMenuBar() {
 

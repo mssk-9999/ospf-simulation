@@ -1,6 +1,10 @@
 package ospf.simulate.ui;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import ospf.simulate.router.Router;
 
@@ -12,10 +16,25 @@ import ospf.simulate.router.Router;
 @SuppressWarnings("serial")
 public class RouterCLIPanel extends JPanel {
 
-	public RouterCLIPanel(Router router) {
+	public RouterCLIPanel() {
 		
-		this.router = router;
+		super();
+		initialize();
 	}
 	
-	private Router router;
+	private void initialize() {
+		
+		this.setLayout(new BorderLayout());
+		this.add(new JScrollPane(getRouterCLIArea()), BorderLayout.CENTER);
+	}
+	
+	public JTextArea getRouterCLIArea() {
+	
+		if (routerCLIArea == null) {
+			routerCLIArea = new JTextArea("Router CLI\n");
+		}
+		return routerCLIArea;
+	}
+	
+	private JTextArea routerCLIArea = null;
 }
