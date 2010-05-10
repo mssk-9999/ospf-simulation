@@ -98,8 +98,9 @@ public class ShowRouterInfoDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
+					Router router = (Router) getRouterComboBox().getSelectedItem();
+					String linkStateInfo = router.showLinkState();
+					getInfoTextArea().setText(linkStateInfo);
 				}
 			});
 		}

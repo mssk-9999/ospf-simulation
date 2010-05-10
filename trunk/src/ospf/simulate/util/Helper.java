@@ -13,7 +13,7 @@ public class Helper {
 	
 	public static int ip2Number(String ip) {
 		
-		for (int i = 0; i < Number2Ip.length; i++) {
+		for (int i = 0; i < 256; i++) {
 			if (ip.equals(Number2Ip[i])) {
 				return i;
 			}

@@ -2,6 +2,8 @@ package ospf.simulate.router;
 
 import java.util.StringTokenizer;
 
+import ospf.simulate.util.Helper;
+
 public class IP {
 
 	public IP(String ip, String mask) {
@@ -13,6 +15,39 @@ public class IP {
 
 	private void calculateNetworkNumber() {
 		// TODO 计算网络号
+		StringTokenizer tokenizer0 = new StringTokenizer(this.ipNumber, ".");
+		StringTokenizer tokenizer = new StringTokenizer(this.maskNumber, ".");
+		
+		StringBuilder tempNetworkNum = new StringBuilder();
+		
+		String ipToken = "";
+		int[] tempIpFrags = new int[4];
+		String maskToken = "";
+		int[] tempMaskFrags = new int[4];
+
+		for (int i = 0; i < 4; i++) {
+			ipToken = tokenizer0.nextToken();
+			tempIpFrags[i] = Integer.parseInt(ipToken);
+			maskToken = tokenizer.nextToken();
+			tempMaskFrags[i] = Integer.parseInt(maskToken);
+			
+			if (tempMaskFrags[i] == 255) {
+				tempNetworkNum.append(ipToken + ".");
+			} else {
+				String tempIpFrag = Helper.number2Ip(tempIpFrags[i]);
+				String tempMaskFrag = Helper.number2Ip(tempMaskFrags[i]);
+				char[] chars = new char[8];
+				for (int j = 0; j < 8; j++) {
+					if (tempMaskFrag.charAt(j) == '1') {
+						chars[j] = tempIpFrag.charAt(j);
+					} else {
+						chars[j] = '0';
+					}
+				}
+				tempNetworkNum.append(Helper.ip2Number(new String(chars)));
+			}
+		}
+		this.networkNumber = tempNetworkNum.toString();
 	}
 	
 	/**

@@ -2,7 +2,9 @@ package ospf.simulate.router;
 
 import java.util.Vector;
 
+import ospf.simulate.Simulator;
 import ospf.simulate.db.ForwardDatabase;
+import ospf.simulate.db.LinkStateDBItem;
 import ospf.simulate.db.LinkStateDatabase;
 import ospf.simulate.db.NeighborDBItem;
 import ospf.simulate.db.NeighborDatabase;
@@ -121,7 +123,7 @@ public class Router {
 				item.setMineInterface(interface1);
 				item.setNeighborRID(interface1.getLink().getOtherSide()
 						.getRouter().getRID());
-				item.setState(OSPFState.Init);
+				item.setState(OSPFState.Full);
 
 				// add the neighbor to the database
 				this.getNeighborDatabase().addNeighbor(item);
@@ -142,10 +144,10 @@ public class Router {
 	}
 
 	private void clearNeighborDatabase() {
-		
+
 		getNeighborDatabase().clearAll();
 	}
-	
+
 	public String showNeighbors() {
 
 		StringBuilder stringBuilder = new StringBuilder();
@@ -157,12 +159,32 @@ public class Router {
 		return stringBuilder.toString();
 	}
 
-	public void exchangeInfo(Router router) {
-		// TODO
+	public void exchangeInfo() {
+
+		// clear all the before existing items
 		clearLinkStateDatabase();
-		// TODO 和所有的路由交换数据
+		
+		// exchange data with other all routers
+		for (int i = 0; i < Simulator.getRouters().size(); i++) {
+			Router router = Simulator.getRouters().get(i);
+			NeighborDatabase nDB =  router.getNeighborDatabase();
+			Vector<NeighborDBItem> neighbors = nDB.getNeighbors();
+			for (int j = 0; j < neighbors.size(); j++) {
+				// initialize the lsdb item
+				LinkStateDBItem item = new LinkStateDBItem();
+				item.setFromRID(router.getRID());
+				item.setToRID(neighbors.get(j).getNeighborRID());
+				item.setInterface(neighbors.get(j).getMineInterface());
+				item.setCost(neighbors.get(j).getMineInterface().getLink()
+						.getCost());
+
+				// add the item to the lsdb
+				this.getLinkStateDatabase().addItem(item);
+			}
+		}
+		
 	}
-	
+
 	public LinkStateDatabase getLinkStateDatabase() {
 
 		if (linkStateDatabase == null) {
@@ -172,15 +194,22 @@ public class Router {
 	}
 
 	private void clearLinkStateDatabase() {
-		
+
 		getLinkStateDatabase().clearAll();
 	}
-	
+
 	public String showLinkState() {
 		// TODO 打印所有的该区域链路状态信息
-		return "";
+		StringBuilder linkStateInfo = new StringBuilder();
+		linkStateInfo.append("OSPF Router with ID (" + this.getRID().toString()
+				+ ") (Process ID 1)" + "\n");
+		linkStateInfo.append("FromRID\tToRID\tVia\tCost\n");
+		for (int i = 0; i < getLinkStateDatabase().getItems().size(); i++) {
+			linkStateInfo.append(getLinkStateDatabase().getItems().get(i) + "\n");
+		}
+		return linkStateInfo.toString();
 	}
-	
+
 	public ForwardDatabase getForwardDatabase() {
 
 		if (forwardDatabase == null) {
