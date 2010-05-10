@@ -18,7 +18,10 @@ public class RunOSPFProtocol {
 			System.err.println(router.getRID());
 		}
 		
+		// find the neighbor of the routers
 		findNeighbor();
+		// all the routers exchange the info and save into the link state database
+		exchangeInfo();
 	}
 	
 	private static void calRID() {
@@ -40,9 +43,8 @@ public class RunOSPFProtocol {
 	private static void exchangeInfo() {
 		
 		for (int i = 0; i < Simulator.getRouters().size(); i++) {
-			for (int j = 0; j < Simulator.getRouters().size(); j++) {
-				if (i == j) continue;
-			}
+			Router router = Simulator.getRouters().get(i);
+			router.exchangeInfo();
 		}
 	}
 }
