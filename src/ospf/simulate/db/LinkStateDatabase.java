@@ -13,6 +13,8 @@ public class LinkStateDatabase {
 	 */
 	public void addItem(LinkStateDBItem item) {
 		
+		if (items.contains(item))
+			return;
 		items.add(item);
 	}
 	
@@ -21,37 +23,15 @@ public class LinkStateDatabase {
 		items.remove(item);
 	}
 	
+	public Vector<LinkStateDBItem> getItems() {
+		
+		return items;
+	}
+	
+	public void clearAll() {
+		
+		items.removeAllElements();
+	}
+	
 	private Vector<LinkStateDBItem> items = new Vector<LinkStateDBItem>();	
-}
-
-class LinkStateDBItem {
-	
-	
-	public IP getRID() {
-		return RID;
-	}
-	
-	public IP getNeighbor() {
-		return neighbor;
-	}
-	
-	public int getCost() {
-		return cost;
-	}
-	
-	public void setRID(IP rID) {
-		RID = rID;
-	}
-	
-	public void setNeighbor(IP neighbor) {
-		this.neighbor = neighbor;
-	}
-	
-	public void setCost(int cost) {
-		this.cost = cost;
-	}
-	
-	private IP RID;
-	private IP neighbor;
-	private int cost;
 }

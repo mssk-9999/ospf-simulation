@@ -39,5 +39,10 @@ public class RunOSPFProtocol {
 	
 	private static void exchangeInfo() {
 		
+		for (int i = 0; i < Simulator.getRouters().size(); i++) {
+			for (int j = 0; j < Simulator.getRouters().size(); j++) {
+				if (i == j) continue;
+			}
+		}
 	}
 }
