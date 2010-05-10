@@ -157,6 +157,12 @@ public class Router {
 		return stringBuilder.toString();
 	}
 
+	public void exchangeInfo(Router router) {
+		// TODO
+		clearLinkStateDatabase();
+		// TODO 和所有的路由交换数据
+	}
+	
 	public LinkStateDatabase getLinkStateDatabase() {
 
 		if (linkStateDatabase == null) {
@@ -165,6 +171,16 @@ public class Router {
 		return linkStateDatabase;
 	}
 
+	private void clearLinkStateDatabase() {
+		
+		getLinkStateDatabase().clearAll();
+	}
+	
+	public String showLinkState() {
+		// TODO 打印所有的该区域链路状态信息
+		return "";
+	}
+	
 	public ForwardDatabase getForwardDatabase() {
 
 		if (forwardDatabase == null) {
