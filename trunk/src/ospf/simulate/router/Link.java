@@ -44,6 +44,14 @@ public class Link {
 		this.otherSide = otherSide;
 	}
 
+	public boolean equals(Link link) {
+		
+		if (this.oneSide == link.oneSide && this.otherSide == link.otherSide
+				|| this.oneSide == link.otherSide && this.otherSide == link.oneSide)
+			return true;
+		return false;
+	}
+	
 	public String toString() {
 		
 		return "Link: cost-" + cost + " Dire: " + oneSide + "->" + otherSide;

@@ -179,8 +179,8 @@ public class LinkDialog extends JDialog {
 
 					// TODO get cost
 					try {
-						int cost = Integer
-								.parseInt(getCosTextField().getText());
+						int cost = Integer.parseInt(getCosTextField().getText());
+						
 						Interface interface1 = (Interface) interfaceCombo1
 								.getSelectedItem();
 

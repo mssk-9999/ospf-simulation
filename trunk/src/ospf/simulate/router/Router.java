@@ -1,5 +1,6 @@
 package ospf.simulate.router;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import ospf.simulate.Simulator;
@@ -10,6 +11,7 @@ import ospf.simulate.db.NeighborDBItem;
 import ospf.simulate.db.NeighborDatabase;
 import ospf.simulate.util.InterfaceType;
 import ospf.simulate.util.OSPFState;
+import ospf.simulate.util.SpfA;
 
 public class Router {
 
@@ -128,9 +130,9 @@ public class Router {
 				// add the neighbor to the database
 				this.getNeighborDatabase().addNeighbor(item);
 			} else {
-				System.out.println(interface1.getRouter().toString()
-						+ interface1.getType()
-						+ interface1.getInterfaceNumber() + " link is null");
+				// System.out.println(interface1.getRouter().toString()
+				// + interface1.getType()
+				// + interface1.getInterfaceNumber() + " link is null");
 			}
 		}
 	}
@@ -163,11 +165,11 @@ public class Router {
 
 		// clear all the before existing items
 		clearLinkStateDatabase();
-		
+
 		// exchange data with other all routers
 		for (int i = 0; i < Simulator.getRouters().size(); i++) {
 			Router router = Simulator.getRouters().get(i);
-			NeighborDatabase nDB =  router.getNeighborDatabase();
+			NeighborDatabase nDB = router.getNeighborDatabase();
 			Vector<NeighborDBItem> neighbors = nDB.getNeighbors();
 			for (int j = 0; j < neighbors.size(); j++) {
 				// initialize the lsdb item
@@ -182,7 +184,7 @@ public class Router {
 				this.getLinkStateDatabase().addItem(item);
 			}
 		}
-		
+
 	}
 
 	public LinkStateDatabase getLinkStateDatabase() {
@@ -203,11 +205,142 @@ public class Router {
 		StringBuilder linkStateInfo = new StringBuilder();
 		linkStateInfo.append("OSPF Router with ID (" + this.getRID().toString()
 				+ ") (Process ID 1)" + "\n");
-		linkStateInfo.append("FromRID\tToRID\tVia\tCost\n");
-		for (int i = 0; i < getLinkStateDatabase().getItems().size(); i++) {
-			linkStateInfo.append(getLinkStateDatabase().getItems().get(i) + "\n");
+		// linkStateInfo.append("FromRID\tToRID\tVia\tCost\n");
+		// for (int i = 0; i < getLinkStateDatabase().getItems().size(); i++) {
+		// linkStateInfo.append(getLinkStateDatabase().getItems().get(i) +
+		// "\n");
+		// }
+		linkStateInfo.append("\tRouter Link State (Area 0) + \n\n");
+		linkStateInfo.append("Link ID \t ADV Router \t Link Count \n");
+
+		for (int i = 0; i < Simulator.getRouters().size(); i++) {
+			Router router = Simulator.getRouters().get(i);
+			int linkNum = 0;
+			for (int j = 0; j < router.getInterfaces().size(); j++) {
+				if (router.getInterfaces().get(j).getLink() != null) {
+					linkNum++;
+				}
+			}
+			linkStateInfo.append(router.getRID().getIpNumber() + "\t"
+					+ router.getRID().getIpNumber() + "\t" + linkNum + "\n");
 		}
+
+		linkStateInfo.append("\tNet Link State (Area 0)\n\n");
+		linkStateInfo.append("Link ID \t ADV Router \n");
+		// save all the links
+		Vector<Link> links = new Vector<Link>();
+		for (int i = 0; i < Simulator.getRouters().size(); i++) {
+
+			Router router = Simulator.getRouters().get(i);
+			for (int j = 0; j < router.getInterfaces().size(); j++) {
+
+				Link tempLink = router.getInterfaces().get(j).getLink();
+				if (tempLink != null) {
+
+					if (links.size() == 0) {
+						links.add(tempLink);
+						continue;
+					}
+					for (int k = 0; k < links.size(); k++) {
+
+						if (tempLink.equals(links.get(k))) {
+							break;
+						}
+						links.add(tempLink);
+					}
+				}
+			}
+		}
+		// print all the links
+		for (int i = 0; i < links.size(); i++) {
+			Link temp = links.get(i);
+			IP linkID = null;
+			IP rid = null;
+			Interface interface1 = temp.getOneSide();
+			Interface interface2 = temp.getOtherSide();
+			if (interface1.getIp().compare(interface2.getIp()) == 1) {
+				linkID = interface1.getIp();
+				rid = interface1.getRouter().getRID();
+			} else {
+				linkID = interface2.getIp();
+				rid = interface2.getRouter().getRID();
+			}
+			linkStateInfo.append(linkID.getIpNumber() + "\t"
+					+ rid.getIpNumber() + "\n");
+		}
+
 		return linkStateInfo.toString();
+	}
+
+	public void runSPF() {
+		// TODO 生成路由表
+		// First 生成二维矩阵
+		int dimensions = Simulator.getRouters().size();
+		int[][] graph = new int[dimensions][dimensions];
+		// initialize the graph
+		for (int i = 0; i < dimensions; i++) {
+			for (int j = 0; j < dimensions; j++) {
+				if (i == j) {
+					graph[i][j] = 0;
+					continue;
+				}
+				graph[i][j] = 1;
+				graph[i][j] = getCost(Simulator.getRouters().get(i), Simulator
+						.getRouters().get(j));
+			}
+		}
+//		// output the graph
+		System.err.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+		for (int i = 0; i < dimensions; i++) {
+			for (int j = 0; j < dimensions; j++) {
+				System.err.print(graph[i][j] + " ");
+			}
+			System.err.println();
+		}
+		// 获得最短路径以及其间的具体的路由
+		int start = Simulator.getRouters().indexOf(this);
+		ArrayList<Integer> distance = new ArrayList<Integer>();
+		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
+		
+		// 
+		System.out.println("***************************");
+		
+		
+		System.err.println("start is " + start);
+		System.err.println(distance);
+		System.out.println(paths);
+		System.out.println("***************************");
+		
+		SpfA.dijkstra(graph, start, distance, paths);
+		
+		// 输出该最短路径
+		System.out.println(distance);
+		System.out.println(paths);
+	}
+
+	private int getCost(Router router1, Router router2) {
+
+		for (int i = 0; i < router1.getInterfaces().size(); i++) {
+			Interface interface1 = router1.getInterfaces().get(i);
+			if (interface1.getLink() == null) {
+				continue;
+			} else {
+				if (interface1.getLink().getOtherSide().getRouter().equals(router2)) {
+					
+					return interface1.getLink().getCost();
+				}
+			}
+
+		}
+		return SpfA.MAXVALUE;
+	}
+
+	public boolean equals(Router router) {
+
+		if (this.name == router.getName() && this.getRID() == router.getRID()) {
+			return true;
+		}
+		return false;
 	}
 
 	public ForwardDatabase getForwardDatabase() {
