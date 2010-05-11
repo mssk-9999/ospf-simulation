@@ -31,7 +31,7 @@ public class ShowRouterInfoDialog extends JDialog {
 		this.setTitle("Show the Database");
 		this.setLocation(MainFrame.getMainFrame().getX() + Constant.X_OFFSET,
 				MainFrame.getMainFrame().getY() + Constant.Y_OFFSET);
-		this.setSize(400, 400);
+		this.setSize(500, 400);
 		this.setLayout(new BorderLayout());
 		this.add(getRouterComboBox(), BorderLayout.NORTH);
 		this.add(getButtonBox(), BorderLayout.WEST);
@@ -80,7 +80,6 @@ public class ShowRouterInfoDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					Router router = (Router) getRouterComboBox().getSelectedItem();
 					String neighborInfo = router.showNeighbors();
 					getInfoTextArea().setText(neighborInfo);
@@ -98,9 +97,8 @@ public class ShowRouterInfoDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Router router = (Router) getRouterComboBox().getSelectedItem();
-					String linkStateInfo = router.showLinkState();
-					getInfoTextArea().setText(linkStateInfo);
+
+					// TODO Auto-generated method stub
 				}
 			});
 		}
@@ -115,8 +113,9 @@ public class ShowRouterInfoDialog extends JDialog {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					
+					Router router = (Router) getRouterComboBox().getSelectedItem();
+					String linkStateInfo = router.showLinkState();
+					getInfoTextArea().setText(linkStateInfo);
 				}
 			});
 		}

@@ -15,13 +15,15 @@ public class RunOSPFProtocol {
 			Router router  = Simulator.getRouters().get(i);
 			router.setState(OSPFState.Init);
 			System.err.println(router.info());
-			System.err.println(router.getRID());
+//			System.err.println(router.getRID());
 		}
 		
 		// find the neighbor of the routers
 		findNeighbor();
 		// all the routers exchange the info and save into the link state database
 		exchangeInfo();
+		// all the routers will run the spf algorithms and output to the Forward Database
+		runSPF();
 	}
 	
 	private static void calRID() {
@@ -45,6 +47,13 @@ public class RunOSPFProtocol {
 		for (int i = 0; i < Simulator.getRouters().size(); i++) {
 			Router router = Simulator.getRouters().get(i);
 			router.exchangeInfo();
+		}
+	}
+	
+	private static void runSPF() {
+		for (int i = 0; i < Simulator.getRouters().size(); i++) {
+			Router router = Simulator.getRouters().get(i);
+			router.runSPF();
 		}
 	}
 }
