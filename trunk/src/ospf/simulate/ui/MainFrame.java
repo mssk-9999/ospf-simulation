@@ -11,6 +11,7 @@ import javax.swing.JSplitPane;
 
 import ospf.simulate.Simulator;
 import ospf.simulate.calculate.RunOSPFProtocol;
+import ospf.simulate.router.Router;
 import ospf.simulate.ui.dialog.AddRouterDialog;
 import ospf.simulate.ui.dialog.LinkDialog;
 import ospf.simulate.ui.dialog.SetInterfaceDialog;
@@ -32,7 +33,6 @@ public class MainFrame extends JFrame {
 		this.setLocation(100, 100);
 		this.setSize(800, 600);
 
-		// TODO Add other components and containers
 		this.setContentPane(getMainPane());
 		this.setJMenuBar(getMainMenuBar());
 	}
@@ -63,7 +63,8 @@ public class MainFrame extends JFrame {
 		if (rightSplitPane == null) {
 			rightSplitPane = new JSplitPane();
 			rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-			rightSplitPane.setBottomComponent(getRouterCLIPanel());
+			rightSplitPane.setBottomComponent(getTopologyPanel());
+//			rightSplitPane.setBottomComponent(getRouterCLIPanel());
 		}
 		return rightSplitPane;
 	}
@@ -95,7 +96,7 @@ public class MainFrame extends JFrame {
 	public RouterCLIPanel getRouterCLIPanel() {
 
 		if (routerCLIPanel == null) {
-			routerCLIPanel = new RouterCLIPanel();
+			routerCLIPanel = new RouterCLIPanel(new Router("temp"));
 		}
 		return routerCLIPanel;
 	}

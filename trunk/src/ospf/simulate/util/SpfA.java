@@ -50,7 +50,7 @@ public class SpfA {
 		int n = graph.length;
 		int i, j, k, w, min;
 
-		for (i = 1; i < n; i++) {
+		for (i = 0; i < n; i++) {
 			dist[i] = graph[start][i];
 			S[i] = false;
 			if (i != start && dist[i] < MAXVALUE)

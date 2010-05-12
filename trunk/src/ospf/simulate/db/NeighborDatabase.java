@@ -12,7 +12,7 @@ import java.util.Vector;
 public class NeighborDatabase {
 	
 	public NeighborDatabase() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	public void addNeighbor(NeighborDBItem item) {

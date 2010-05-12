@@ -46,8 +46,8 @@ public class Link {
 
 	public boolean equals(Link link) {
 		
-		if (this.oneSide == link.oneSide && this.otherSide == link.otherSide
-				|| this.oneSide == link.otherSide && this.otherSide == link.oneSide)
+		if (   (this.oneSide.equals(link.oneSide) && this.otherSide.equals(link.otherSide))
+			|| (this.oneSide.equals(link.otherSide) && this.otherSide.equals(link.oneSide)))
 			return true;
 		return false;
 	}
