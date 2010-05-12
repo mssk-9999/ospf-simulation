@@ -1,9 +1,7 @@
 package ospf.simulate.router;
 
-import java.util.ArrayList;
-import java.util.Vector;
-
 import ospf.simulate.Simulator;
+import ospf.simulate.db.ForwardDBItem;
 import ospf.simulate.db.ForwardDatabase;
 import ospf.simulate.db.LinkStateDBItem;
 import ospf.simulate.db.LinkStateDatabase;
@@ -205,11 +203,7 @@ public class Router {
 		StringBuilder linkStateInfo = new StringBuilder();
 		linkStateInfo.append("OSPF Router with ID (" + this.getRID().toString()
 				+ ") (Process ID 1)" + "\n");
-		// linkStateInfo.append("FromRID\tToRID\tVia\tCost\n");
-		// for (int i = 0; i < getLinkStateDatabase().getItems().size(); i++) {
-		// linkStateInfo.append(getLinkStateDatabase().getItems().get(i) +
-		// "\n");
-		// }
+
 		linkStateInfo.append("\tRouter Link State (Area 0) + \n\n");
 		linkStateInfo.append("Link ID \t ADV Router \t Link Count \n");
 
@@ -225,28 +219,41 @@ public class Router {
 					+ router.getRID().getIpNumber() + "\t" + linkNum + "\n");
 		}
 
+		// TODO delete the 重复 net link 
 		linkStateInfo.append("\tNet Link State (Area 0)\n\n");
 		linkStateInfo.append("Link ID \t ADV Router \n");
 		// save all the links
 		Vector<Link> links = new Vector<Link>();
+
 		for (int i = 0; i < Simulator.getRouters().size(); i++) {
 
 			Router router = Simulator.getRouters().get(i);
+			System.out.println("***" + router.getName());
 			for (int j = 0; j < router.getInterfaces().size(); j++) {
 
 				Link tempLink = router.getInterfaces().get(j).getLink();
+
 				if (tempLink != null) {
 
 					if (links.size() == 0) {
 						links.add(tempLink);
 						continue;
-					}
-					for (int k = 0; k < links.size(); k++) {
-
-						if (tempLink.equals(links.get(k))) {
-							break;
+					} else {
+						
+						// 遍历Links的所有元素
+						for (int k = 0; k < links.size(); k++)  {
+							Link aLink = links.get(k);
+							if (tempLink.equals(aLink)) {
+								break;
+							}
+							if (k == links.size() - 1) {
+								if (tempLink.equals(aLink)) {
+									break;
+								} else {
+									links.add(tempLink);
+								}
+							}
 						}
-						links.add(tempLink);
 					}
 				}
 			}
@@ -266,13 +273,15 @@ public class Router {
 				rid = interface2.getRouter().getRID();
 			}
 			linkStateInfo.append(linkID.getIpNumber() + "\t"
-					+ rid.getIpNumber() + "\n");
+					+ rid.getIpNumber() + " ^^ " + temp.toString() + "\n");
 		}
 
 		return linkStateInfo.toString();
 	}
 
 	public void runSPF() {
+
+		clearForwardDatabase();
 		// TODO 生成路由表
 		// First 生成二维矩阵
 		int dimensions = Simulator.getRouters().size();
@@ -289,33 +298,72 @@ public class Router {
 						.getRouters().get(j));
 			}
 		}
-//		// output the graph
-		System.err.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-		for (int i = 0; i < dimensions; i++) {
-			for (int j = 0; j < dimensions; j++) {
-				System.err.print(graph[i][j] + " ");
-			}
-			System.err.println();
-		}
+
 		// 获得最短路径以及其间的具体的路由
 		int start = Simulator.getRouters().indexOf(this);
 		ArrayList<Integer> distance = new ArrayList<Integer>();
 		ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
-		
-		// 
-		System.out.println("***************************");
-		
-		
-		System.err.println("start is " + start);
-		System.err.println(distance);
-		System.out.println(paths);
-		System.out.println("***************************");
-		
+
 		SpfA.dijkstra(graph, start, distance, paths);
-		
+
 		// 输出该最短路径
-		System.out.println(distance);
-		System.out.println(paths);
+		System.out.println("^_^" + distance);
+		System.out.println("^_^" + paths);
+
+		// 将该路径存储到路由表中
+		for (int i = 0; i < Simulator.getRouters().size(); i++) {
+
+			if (i == start) {
+				continue;
+			}
+			ForwardDBItem item = new ForwardDBItem();
+			Router distrRouter = Simulator.getRouters().get(i);
+			int totalCost = (Integer) distance.get(i);
+			Router nextRouter = Simulator.getRouters().get(paths.get(i).get(0));
+			IP nextIp = getNextIp(nextRouter);
+			Interface mineInterface = getMineInterface(nextRouter);
+
+			item.setCost(totalCost);
+			item.setRouter(distrRouter);
+			item.setNextInterfaceIp(nextIp);
+			item.setCurrentInterface(mineInterface);
+
+			this.getForwardDatabase().addItem(item);
+		}
+	}
+
+	private IP getNextIp(Router next) {
+
+		for (int i = 0; i < this.getInterfaces().size(); i++) {
+			Interface interface1 = this.getInterfaces().get(i);
+			if (interface1.getLink() == null) {
+				continue;
+			} else {
+				if (interface1.getLink().getOtherSide().getRouter()
+						.equals(next)) {
+
+					return interface1.getLink().getOtherSide().getIp();
+				}
+			}
+		}
+		return null;
+	}
+
+	private Interface getMineInterface(Router next) {
+
+		for (int i = 0; i < this.getInterfaces().size(); i++) {
+			Interface interface1 = this.getInterfaces().get(i);
+			if (interface1.getLink() == null) {
+				continue;
+			} else {
+				if (interface1.getLink().getOtherSide().getRouter()
+						.equals(next)) {
+
+					return interface1;
+				}
+			}
+		}
+		return null;
 	}
 
 	private int getCost(Router router1, Router router2) {
@@ -325,8 +373,9 @@ public class Router {
 			if (interface1.getLink() == null) {
 				continue;
 			} else {
-				if (interface1.getLink().getOtherSide().getRouter().equals(router2)) {
-					
+				if (interface1.getLink().getOtherSide().getRouter().equals(
+						router2)) {
+
 					return interface1.getLink().getCost();
 				}
 			}
@@ -337,7 +386,7 @@ public class Router {
 
 	public boolean equals(Router router) {
 
-		if (this.name == router.getName() && this.getRID() == router.getRID()) {
+		if (this.name == router.getName() /*&& this.getRID() == router.getRID()*/) {
 			return true;
 		}
 		return false;
@@ -349,6 +398,22 @@ public class Router {
 			forwardDatabase = new ForwardDatabase();
 		}
 		return forwardDatabase;
+	}
+
+	public String showForwardDB() {
+		// TODO 00000000000000000000实现显示路由表信息000000000000000000000
+		StringBuilder forwardInfo = new StringBuilder();
+		forwardInfo.append("Router\tCost\tNext IP\tMy Interface\n");
+		for (int i = 0; i < getForwardDatabase().getItems().size(); i++) {
+			ForwardDBItem item = getForwardDatabase().getItems().get(i);
+			forwardInfo.append(item.toString() + "\n");
+		}
+		return forwardInfo.toString();
+	}
+
+	private void clearForwardDatabase() {
+
+		getForwardDatabase().clearAll();
 	}
 
 	private String name;

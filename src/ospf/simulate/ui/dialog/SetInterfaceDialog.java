@@ -106,7 +106,7 @@ public class SetInterfaceDialog extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO add the ip info to the interface
+					// add the ip info to the interface
 					Interface interface1 = (Interface) getInterfacesBox()
 							.getSelectedItem();
 					interface1.setIp(new IP(getIpTextField().getText(),
@@ -129,7 +129,7 @@ public class SetInterfaceDialog extends JDialog {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO add the ip info to the interface
+					// add the ip info to the interface
 					Interface interface1 = (Interface) getInterfacesBox()
 							.getSelectedItem();
 					interface1.setIp(null);

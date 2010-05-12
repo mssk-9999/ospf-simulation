@@ -7,6 +7,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -56,6 +57,8 @@ public class RouterListPanel extends JPanel {
 					interfaceList.setModel(model2);
 					interfaceList.validate();
 					// TODO 设置路由器的CLI显示
+					RouterCLIPanel cliPanel = new RouterCLIPanel(router);
+					MainFrame.getMainFrame().getRightSplitPane().setTopComponent(new JScrollPane(cliPanel));
 				}
 			});
 		}

@@ -53,14 +53,25 @@ public class Interface {
 	}
 
 	public String getInterfaceInfo() {
-		
+
 		return this.getType() + "/" + this.getInterfaceNumber();
 	}
-	
+
 	public String info() {
 
 		return "[Interface: " + this.toString() + " -- " + ip + " -- " + link
 				+ "]";
+	}
+
+	public boolean equals(Interface interface1) {
+
+		if (this.getType() == interface1.getType()
+				&& this.getInterfaceNumber() == interface1.getInterfaceNumber()
+				&& this.getRouter().equals(interface1.getRouter())) {
+
+			return true;
+		}
+		return false;
 	}
 
 	private Router router = null;
